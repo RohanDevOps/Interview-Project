@@ -1,0 +1,23 @@
+# Application settings
+image:
+  repository: stacksimplify/kube-usermanagement-microservice
+  tag: 1.0.0
+
+# Database settings
+db:
+  hostname: mysql
+  port: 3306
+  name: usermgmt
+  username: dbadmin
+
+# Port settings
+service:
+  type: NodePort
+  port: 8095
+
+secret:
+  name: my-secret
+  type: Opaque
+  data:
+    db-password: <base64-encoded-password>
+

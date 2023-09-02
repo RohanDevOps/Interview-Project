@@ -1,0 +1,5 @@
+apiVersion: v2
+name: usermgmt-microservice
+description: Helm chart for usermgmt-microservice
+version: 0.1.0
+

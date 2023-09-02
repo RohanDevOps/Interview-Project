@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ template "usermgmt-microservice.fullname" . }}
+  labels:
+    app: {{ template "usermgmt-microservice.name" . }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ template "usermgmt-microservice.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "usermgmt-microservice.name" . }}
+    spec:
+      initContainers:
+        - name: init-db
+          image: busybox:1.31
+          command: ['sh', '-c', 'echo -e "Checking for the availability of MySQL Server deployment"; while ! nc -z {{ .Values.db.hostname }} {{ .Values.db.port }}; do sleep 1; printf "-"; done; echo -e "  >> MySQL DB Server has started";']
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: {{ .Values.service.port }}
+          env:
+            - name: DB_HOSTNAME
+              value: {{ .Values.db.hostname }}
+            - name: DB_PORT
+              value: {{ .Values.db.port }}
+            - name: DB_NAME
+              value: {{ .Values.db.name }}
+            - name: DB_USERNAME
+              value: {{ .Values.db.username }}
+
